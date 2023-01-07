@@ -1,0 +1,42 @@
+.body {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 3rem 5rem;
+
+  .taskBlock {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    background-color: black;
+    color: white;
+    border: 3px solid white;
+    padding: 0.5rem;
+
+    transition: all 0.3s ease;
+    &:hover {
+      transform: scale(1.15);
+    }
+
+    button {
+      max-width: 150px;
+    }
+  }
+
+  .Complete {
+    background-color: rgb(77, 239, 77);
+    color: rgb(35, 2, 2);
+  }
+
+  .Not.Complete {
+    background-color: grey;
+    color: white;
+  }
+
+  .Expired {
+    background-color: red;
+    color: white;
+  }
+}
