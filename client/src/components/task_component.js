@@ -50,7 +50,7 @@ const TaskComponent = (props) => {
       });
   }, [currentUser]);
 
-  setTimeout({}, 500);
+  setTimeout(() => {}, 500);
 
   return (
     <div className="taskbox" style={{ padding: "3rem" }}>
