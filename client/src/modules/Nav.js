@@ -38,16 +38,20 @@ const Nav = (props) => {
           return TaskService.getTaskByUUID(uuid);
         })
         .then((data) => {
-          setTasks([
-            ...tasks,
-            {
-              _id: data.data._id,
-              id: data.data.id,
-              content: data.data.content,
-              date: data.data.date.split("T")[0],
-              isComplete: data.data.isComplete,
-            },
-          ]);
+          setTasks(
+            [
+              ...tasks,
+              {
+                _id: data.data._id,
+                id: data.data.id,
+                content: data.data.content,
+                date: data.data.date.split("T")[0],
+                isComplete: data.data.isComplete,
+              },
+            ].sort((a, b) => {
+              return new Date(a.date) - new Date(b.date);
+            })
+          );
           setUUID(uuidv4());
         })
         .catch((err) => {

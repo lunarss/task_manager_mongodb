@@ -32,17 +32,21 @@ const TaskComponent = (props) => {
           taskList.push(data.data[i]);
         }
         setTasks(
-          taskList.map((obj) => {
-            let { _id, id, content, date, isComplete } = obj;
-            let task = {
-              _id: _id,
-              id: id,
-              content: content,
-              date: date.split("T")[0],
-              isComplete: isComplete,
-            };
-            return task;
-          })
+          taskList
+            .map((obj) => {
+              let { _id, id, content, date, isComplete } = obj;
+              let task = {
+                _id: _id,
+                id: id,
+                content: content,
+                date: date.split("T")[0],
+                isComplete: isComplete,
+              };
+              return task;
+            })
+            .sort((a, b) => {
+              return new Date(a.date) - new Date(b.date);
+            })
         );
       })
       .catch((err) => {
