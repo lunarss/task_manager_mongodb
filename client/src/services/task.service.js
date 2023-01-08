@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL + "tasks";
+const API_URL = process.env.REACT_APP_API_URL + "/tasks";
 
 class TaskService {
   // create a new task
