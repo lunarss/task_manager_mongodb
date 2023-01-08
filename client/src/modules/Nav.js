@@ -35,19 +35,20 @@ const Nav = (props) => {
       TaskService.postTask(uuid, taskContent, taskDate, complete)
         .then((response) => {
           console.log(response.data);
-          TaskService.getTaskByUUID(uuid).then((data) => {
-            setTasks([
-              ...tasks,
-              {
-                _id: data.data._id,
-                id: data.data.id,
-                content: data.data.content,
-                date: data.data.date.split("T")[0],
-                isComplete: data.data.isComplete,
-              },
-            ]);
-            setUUID(uuidv4());
-          });
+          return TaskService.getTaskByUUID(uuid);
+        })
+        .then((data) => {
+          setTasks([
+            ...tasks,
+            {
+              _id: data.data._id,
+              id: data.data.id,
+              content: data.data.content,
+              date: data.data.date.split("T")[0],
+              isComplete: data.data.isComplete,
+            },
+          ]);
+          setUUID(uuidv4());
         })
         .catch((err) => {
           console.log(err);
