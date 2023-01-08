@@ -25,8 +25,8 @@ const NavComponent = (props) => {
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <button onClick={handleBackToHome} class="btn">
-                    <i class="fa fa-home"></i>
+                  <button onClick={handleBackToHome} className="btn">
+                    <i className="fa fa-home"></i>
                   </button>
                   {/* <Link className="nav-link active" to="/">Home</Link> */}
                 </li>
