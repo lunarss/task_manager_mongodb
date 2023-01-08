@@ -23,7 +23,7 @@ class TaskService {
     );
   }
 
-  // get all tasks by user id
+  // get all tasks of current login user
   getTasks(_id) {
     let token;
     if (localStorage.getItem("user")) {
