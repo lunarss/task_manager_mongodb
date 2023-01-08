@@ -6,11 +6,11 @@ run `node app.js` in server folder
 
 run `npm start` in client folder
 
-change `localhost:8080` to your own domain IP from `.env` file in client folder
+change `localhost:8080` to your own domain name from `.env` file in client folder
 
-change `<mongodb>` and `<password>` to your own mongodb server setup
+change `<mongodb>` and `<password>` to your own mongodb server setup from `.env` file in server folder
 
-## Setup PM2 process manager to keep your app runnin
+## Setup PM2 process manager to keep your app running
 
 **install pm2**:
 
