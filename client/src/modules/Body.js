@@ -70,9 +70,12 @@ const Body = (props) => {
 
   useEffect(() => {
     let today = new Date();
+
     let updateTasks = tasks.filter((task) => {
+      let taskTime = new Date(task.date);
       return (
-        new Date(task.date).getDate() < today.getDate() &&
+        taskTime.getTime() < today.getTime() &&
+        taskTime.getDate() !== today.getDate() &&
         task.isComplete === "Not Complete"
       );
     });

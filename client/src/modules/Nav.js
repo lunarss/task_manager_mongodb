@@ -25,7 +25,11 @@ const Nav = (props) => {
     if (isComplete) {
       complete = "Complete";
     } else {
-      if (new Date(taskDate).getDate() < today.getDate()) {
+      let taskTime = new Date(taskDate);
+      if (
+        taskTime.getTime() < today.getTime() &&
+        taskTime.getDate() !== today.getDate()
+      ) {
         complete = "Expired";
       } else {
         complete = "Not Complete";
