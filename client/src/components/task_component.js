@@ -39,7 +39,7 @@ const TaskComponent = (props) => {
                 _id: _id,
                 id: id,
                 content: content,
-                date: date.split("T")[0],
+                date: date,
                 isComplete: isComplete,
               };
               return task;

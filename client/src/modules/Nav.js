@@ -9,7 +9,8 @@ const Nav = (props) => {
 
   const createNewTask = (e) => {
     let taskContent = document.querySelector("#taskContent").value;
-    let taskDate = document.querySelector("#taskDate").value;
+    let taskDate =
+      document.querySelector("#taskDate").value + "T00:00:00.000-05:00";
     let isComplete = document.querySelector("#complete").checked;
     let complete = "";
     let today = new Date();
@@ -24,7 +25,7 @@ const Nav = (props) => {
     if (isComplete) {
       complete = "Complete";
     } else {
-      if (new Date(taskDate) < today) {
+      if (new Date(taskDate).getDate() < today.getDate()) {
         complete = "Expired";
       } else {
         complete = "Not Complete";
@@ -45,7 +46,7 @@ const Nav = (props) => {
                 _id: data.data._id,
                 id: data.data.id,
                 content: data.data.content,
-                date: data.data.date.split("T")[0],
+                date: data.data.date,
                 isComplete: data.data.isComplete,
               },
             ].sort((a, b) => {
