@@ -36,6 +36,35 @@ const Body = (props) => {
     }
   };
 
+  const expireTasks = (task, index) => {
+    if (task["isComplete"] === "Not Complete") {
+      TaskService.updateTask(
+        task._id,
+        task.id,
+        task.content,
+        task.date,
+        "Expired"
+      )
+        .then((response) => {
+          console.log(response.data);
+          setTasks([
+            ...tasks.slice(0, index),
+            {
+              _id: task._id,
+              id: task.id,
+              content: task.content,
+              date: task.date,
+              isComplete: "Expired",
+            },
+            ...tasks.slice(index + 1),
+          ]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   const deleteTask = (task, index) => {
     TaskService.deleteTask(task._id)
       .then((response) => {
@@ -81,7 +110,7 @@ const Body = (props) => {
     });
 
     for (let i = 0; i < updateTasks.length; i++) {
-      changeTaskStatus(updateTasks[i]);
+      expireTasks(updateTasks[i]);
     }
 
     setTimeout(() => {
