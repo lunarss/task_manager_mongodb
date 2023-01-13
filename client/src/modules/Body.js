@@ -98,6 +98,7 @@ const Body = (props) => {
   };
 
   useEffect(() => {
+    console.log("Use effect on Body Module.");
     let today = new Date();
 
     let updateTasks = tasks.filter((task) => {
