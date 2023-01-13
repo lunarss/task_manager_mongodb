@@ -74,6 +74,9 @@ const RegisterComponent = () => {
           <span>Register</span>
         </button>
       </div>
+      <footer className="pt-3 mt-4 text-muted border-top">
+        Your password will be salted and hashed securely.
+      </footer>
     </div>
   );
 };

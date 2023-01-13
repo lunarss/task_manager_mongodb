@@ -78,6 +78,9 @@ const LoginComponent = (props) => {
           </button>
         </div>
       </div>
+      <footer className="pt-3 mt-4 text-muted border-top">
+        Your password will be salted and hashed securely.
+      </footer>
     </div>
   );
 };
