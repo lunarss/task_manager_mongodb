@@ -102,7 +102,7 @@ const Body = (props) => {
   };
 
   useEffect(() => {
-    console.log("Use effect on Body Module.");
+    // console.log("Use effect on Body Module.");
     let today = new Date();
 
     let updateTasks = tasks.filter((task) => {
@@ -132,6 +132,9 @@ const Body = (props) => {
       </button>
       <div className="body">
         {tasks.map((task, index) => {
+          if (sortVal === "down") {
+            index = tasks.length - index - 1;
+          }
           return (
             <div className="taskBlock">
               <p>
