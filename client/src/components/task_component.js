@@ -10,13 +10,10 @@ const TaskComponent = (props) => {
   let [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
 
-  const handleLoginPage = () => {
-    navigate("/login");
-  };
-
   useEffect(() => {
     console.log("Use effect on Task Page.");
     let _id;
+
     if (currentUser) {
       _id = currentUser.user._id;
       setUserName(currentUser.user.username);
@@ -25,36 +22,83 @@ const TaskComponent = (props) => {
       setUserName("User");
     }
 
-    TaskService.getTasks(_id)
-      .then((data) => {
-        let taskList = [];
-        for (let i = 0; i < data.data.length; i++) {
-          taskList.push(data.data[i]);
-        }
-        setTasks(
-          taskList
-            .map((obj) => {
-              let { _id, id, content, date, isComplete } = obj;
-              let task = {
-                _id: _id,
-                id: id,
-                content: content,
-                date: date,
-                isComplete: isComplete,
-              };
-              return task;
-            })
-            .sort((a, b) => {
-              return new Date(a.date) - new Date(b.date);
-            })
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    fetchAndUpdateData(_id).catch((err) => {
+      console.log(err);
+    });
   }, [currentUser]);
 
-  setTimeout(() => {}, 500);
+  const handleLoginPage = () => {
+    navigate("/login");
+  };
+
+  const expireTasks = async (task, index) => {
+    if (task["isComplete"] === "Not Complete") {
+      let response = await TaskService.updateTask(
+        task._id,
+        task.id,
+        task.content,
+        task.date,
+        "Expired"
+      );
+      console.log(response.data);
+      setTasks([
+        ...tasks.slice(0, index),
+        {
+          _id: task._id,
+          id: task.id,
+          content: task.content,
+          date: task.date,
+          isComplete: "Expired",
+        },
+        ...tasks.slice(index + 1),
+      ]);
+    }
+  };
+
+  const fetchAndUpdateData = async (_id) => {
+    let data;
+    let updateTasks;
+    let today = new Date();
+    let taskList = [];
+
+    data = await TaskService.getTasks(_id);
+
+    for (let i = 0; i < data.data.length; i++) {
+      taskList.push(data.data[i]);
+    }
+    setTasks(
+      taskList
+        .map((obj) => {
+          let { _id, id, content, date, isComplete } = obj;
+          let task = {
+            _id: _id,
+            id: id,
+            content: content,
+            date: date,
+            isComplete: isComplete,
+          };
+          return task;
+        })
+        .sort((a, b) => {
+          return new Date(a.date) - new Date(b.date);
+        })
+    );
+
+    updateTasks = tasks.filter((task) => {
+      let taskTime = new Date(task.date);
+      return (
+        taskTime.getTime() < today.getTime() &&
+        taskTime.getDate() !== today.getDate() &&
+        task.isComplete === "Not Complete"
+      );
+    });
+
+    for (let i = 0; i < updateTasks.length; i++) {
+      expireTasks(updateTasks[i]).catch((err) => {
+        console.log(err);
+      });
+    }
+  };
 
   return (
     <div className="taskbox" style={{ padding: "3rem" }}>

@@ -7,6 +7,15 @@ const Body = (props) => {
   let [sortVal, setSortVal] = useState("up");
   let [currentTime, setCurrentTime] = useState(0);
 
+  function timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function sleep1s(callback, ...args) {
+    await timeout(1000);
+    return callback(...args);
+  }
+
   const changeTaskStatus = (task, index) => {
     if (task["isComplete"] === "Not Complete") {
       TaskService.updateTask(
@@ -36,32 +45,27 @@ const Body = (props) => {
     }
   };
 
-  const expireTasks = (task, index) => {
+  const expireTasks = async (task, index) => {
     if (task["isComplete"] === "Not Complete") {
-      TaskService.updateTask(
+      let response = await TaskService.updateTask(
         task._id,
         task.id,
         task.content,
         task.date,
         "Expired"
-      )
-        .then((response) => {
-          console.log(response.data);
-          setTasks([
-            ...tasks.slice(0, index),
-            {
-              _id: task._id,
-              id: task.id,
-              content: task.content,
-              date: task.date,
-              isComplete: "Expired",
-            },
-            ...tasks.slice(index + 1),
-          ]);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      );
+      console.log(response.data);
+      setTasks([
+        ...tasks.slice(0, index),
+        {
+          _id: task._id,
+          id: task.id,
+          content: task.content,
+          date: task.date,
+          isComplete: "Expired",
+        },
+        ...tasks.slice(index + 1),
+      ]);
     }
   };
 
@@ -111,12 +115,14 @@ const Body = (props) => {
     });
 
     for (let i = 0; i < updateTasks.length; i++) {
-      expireTasks(updateTasks[i]);
+      expireTasks(updateTasks[i]).catch((err) => {
+        console.log(err);
+      });
     }
 
-    setTimeout(() => {
+    sleep1s(() => {
       setCurrentTime(currentTime + 1);
-    }, 1000);
+    });
   }, [currentTime]);
 
   return (
