@@ -46,27 +46,25 @@ const Body = (props) => {
   };
 
   const expireTasks = async (task, index) => {
-    if (task["isComplete"] === "Not Complete") {
-      let response = await TaskService.updateTask(
-        task._id,
-        task.id,
-        task.content,
-        task.date,
-        "Expired"
-      );
-      console.log(response.data);
-      setTasks([
-        ...tasks.slice(0, index),
-        {
-          _id: task._id,
-          id: task.id,
-          content: task.content,
-          date: task.date,
-          isComplete: "Expired",
-        },
-        ...tasks.slice(index + 1),
-      ]);
-    }
+    let response = await TaskService.updateTask(
+      task._id,
+      task.id,
+      task.content,
+      task.date,
+      "Expired"
+    );
+    console.log(response.data);
+    setTasks([
+      ...tasks.slice(0, index),
+      {
+        _id: task._id,
+        id: task.id,
+        content: task.content,
+        date: task.date,
+        isComplete: "Expired",
+      },
+      ...tasks.slice(index + 1),
+    ]);
   };
 
   const deleteTask = (task, index) => {
@@ -102,20 +100,21 @@ const Body = (props) => {
   };
 
   useEffect(() => {
-    // console.log("Use effect on Body Module.");
+    console.log("Use effect on Body Module.");
     let today = new Date();
 
-    let updateTasks = tasks.filter((task) => {
-      let taskTime = new Date(task.date);
-      return (
-        taskTime.getTime() < today.getTime() &&
-        taskTime.getDate() !== today.getDate() &&
-        task.isComplete === "Not Complete"
-      );
-    });
-
-    for (let i = 0; i < updateTasks.length; i++) {
-      expireTasks(updateTasks[i]).catch((err) => {
+    for (let i = 0; i < tasks.length; i++) {
+      let taskTime = new Date(tasks[i].date);
+      if (
+        !(
+          taskTime.getTime() < today.getTime() &&
+          taskTime.getDate() !== today.getDate() &&
+          tasks[i].isComplete === "Not Complete"
+        )
+      ) {
+        continue;
+      }
+      expireTasks(tasks[i]).catch((err) => {
         console.log(err);
       });
     }
@@ -132,13 +131,16 @@ const Body = (props) => {
       </button>
       <div className="body">
         {tasks.map((task, index) => {
+          let name_id;
           if (sortVal === "down") {
-            index = tasks.length - index - 1;
+            name_id = tasks.length - index - 1;
+          } else {
+            name_id = index;
           }
           return (
             <div className="taskBlock">
               <p>
-                {userName}'s Task{index + 1}
+                {userName}'s Task{name_id + 1}
               </p>
               <p>{task.content}</p>
               <p>{task.date.split("T")[0]}</p>

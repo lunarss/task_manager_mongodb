@@ -32,32 +32,29 @@ const TaskComponent = (props) => {
   };
 
   const expireTasks = async (task, index) => {
-    if (task["isComplete"] === "Not Complete") {
-      let response = await TaskService.updateTask(
-        task._id,
-        task.id,
-        task.content,
-        task.date,
-        "Expired"
-      );
-      console.log(response.data);
-      setTasks([
-        ...tasks.slice(0, index),
-        {
-          _id: task._id,
-          id: task.id,
-          content: task.content,
-          date: task.date,
-          isComplete: "Expired",
-        },
-        ...tasks.slice(index + 1),
-      ]);
-    }
+    let response = await TaskService.updateTask(
+      task._id,
+      task.id,
+      task.content,
+      task.date,
+      "Expired"
+    );
+    console.log(response.data);
+    setTasks([
+      ...tasks.slice(0, index),
+      {
+        _id: task._id,
+        id: task.id,
+        content: task.content,
+        date: task.date,
+        isComplete: "Expired",
+      },
+      ...tasks.slice(index + 1),
+    ]);
   };
 
   const fetchAndUpdateData = async (_id) => {
     let data;
-    let updateTasks;
     let today = new Date();
     let taskList = [];
 
@@ -84,17 +81,18 @@ const TaskComponent = (props) => {
         })
     );
 
-    updateTasks = tasks.filter((task) => {
-      let taskTime = new Date(task.date);
-      return (
-        taskTime.getTime() < today.getTime() &&
-        taskTime.getDate() !== today.getDate() &&
-        task.isComplete === "Not Complete"
-      );
-    });
-
-    for (let i = 0; i < updateTasks.length; i++) {
-      expireTasks(updateTasks[i]).catch((err) => {
+    for (let i = 0; i < tasks.length; i++) {
+      let taskTime = new Date(tasks[i].date);
+      if (
+        !(
+          taskTime.getTime() < today.getTime() &&
+          taskTime.getDate() !== today.getDate() &&
+          tasks[i].isComplete === "Not Complete"
+        )
+      ) {
+        continue;
+      }
+      expireTasks(tasks[i]).catch((err) => {
         console.log(err);
       });
     }
