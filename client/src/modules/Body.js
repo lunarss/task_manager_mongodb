@@ -114,7 +114,7 @@ const Body = (props) => {
       ) {
         continue;
       }
-      expireTasks(tasks[i]).catch((err) => {
+      expireTasks(tasks[i], i).catch((err) => {
         console.log(err);
       });
     }
