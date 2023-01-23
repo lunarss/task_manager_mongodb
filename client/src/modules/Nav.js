@@ -3,7 +3,7 @@ import TaskService from "../services/task.service";
 import { v4 as uuidv4 } from "uuid";
 
 const Nav = (props) => {
-  let { userName, tasks, setTasks } = props;
+  let { userName, tasks, setTasks, today } = props;
   let [message, setMessage] = useState("");
   let [uuid, setUUID] = useState(uuidv4());
 
@@ -13,7 +13,6 @@ const Nav = (props) => {
       document.querySelector("#taskDate").value + "T00:00:00.000-05:00";
     let isComplete = document.querySelector("#complete").checked;
     let complete = "";
-    let today = new Date();
 
     if (!taskContent || !taskDate) {
       setMessage("Please complete the task.");

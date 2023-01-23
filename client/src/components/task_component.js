@@ -8,10 +8,11 @@ const TaskComponent = (props) => {
   let { currentUser, setCurrentUser } = props;
   let [userName, setUserName] = useState("User");
   let [tasks, setTasks] = useState([]);
+  let [today, setToday] = useState(new Date());
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Use effect on Task Page.");
+    // console.log("Use effect on Task Page.");
     let _id;
 
     if (currentUser) {
@@ -22,7 +23,7 @@ const TaskComponent = (props) => {
       setUserName("User");
     }
 
-    fetchAndUpdateData(_id).catch((err) => {
+    fetchTaskDataByUserID(_id).catch((err) => {
       console.log(err);
     });
   }, [currentUser]);
@@ -31,31 +32,8 @@ const TaskComponent = (props) => {
     navigate("/login");
   };
 
-  const expireTasks = async (task, index) => {
-    let response = await TaskService.updateTask(
-      task._id,
-      task.id,
-      task.content,
-      task.date,
-      "Expired"
-    );
-    console.log(response.data);
-    setTasks([
-      ...tasks.slice(0, index),
-      {
-        _id: task._id,
-        id: task.id,
-        content: task.content,
-        date: task.date,
-        isComplete: "Expired",
-      },
-      ...tasks.slice(index + 1),
-    ]);
-  };
-
-  const fetchAndUpdateData = async (_id) => {
+  const fetchTaskDataByUserID = async (_id) => {
     let data;
-    let today = new Date();
     let taskList = [];
 
     data = await TaskService.getTasks(_id);
@@ -80,22 +58,6 @@ const TaskComponent = (props) => {
           return new Date(a.date) - new Date(b.date);
         })
     );
-
-    for (let i = 0; i < tasks.length; i++) {
-      let taskTime = new Date(tasks[i].date);
-      if (
-        !(
-          taskTime.getTime() < today.getTime() &&
-          taskTime.getDate() !== today.getDate() &&
-          tasks[i].isComplete === "Not Complete"
-        )
-      ) {
-        continue;
-      }
-      expireTasks(tasks[i]).catch((err) => {
-        console.log(err);
-      });
-    }
   };
 
   return (
@@ -117,6 +79,8 @@ const TaskComponent = (props) => {
             setCurrentUser={setCurrentUser}
             tasks={tasks}
             setTasks={setTasks}
+            today={today}
+            setToday={setToday}
           />
         </div>
         <div style={{ width: "70%" }}>
@@ -127,6 +91,8 @@ const TaskComponent = (props) => {
             setCurrentUser={setCurrentUser}
             tasks={tasks}
             setTasks={setTasks}
+            today={today}
+            setToday={setToday}
           />
         </div>
       </div>

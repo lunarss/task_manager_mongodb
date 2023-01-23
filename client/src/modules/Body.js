@@ -2,10 +2,35 @@ import React, { useState, useEffect } from "react";
 import TaskService from "../services/task.service";
 
 const Body = (props) => {
-  let { userName, tasks, setTasks } = props;
+  let { userName, tasks, setTasks, today, setToday } = props;
   let [sortName, setSortName] = useState("Sort by time ↑");
   let [sortVal, setSortVal] = useState("up");
   let [currentTime, setCurrentTime] = useState(0);
+
+  useEffect(() => {
+    // console.log("Use effect on Body Module.");
+
+    for (let i = 0; i < tasks.length; i++) {
+      let taskTime = new Date(tasks[i].date);
+      if (
+        !(
+          taskTime.getTime() < today.getTime() &&
+          taskTime.getDate() !== today.getDate() &&
+          tasks[i].isComplete === "Not Complete"
+        )
+      ) {
+        continue;
+      }
+      expireTasks(tasks[i], i).catch((err) => {
+        console.log(err);
+      });
+    }
+
+    sleep1s(() => {
+      setToday(new Date());
+      setCurrentTime((currentTime + 1) % 2);
+    });
+  }, [currentTime]);
 
   function timeout(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -98,31 +123,6 @@ const Body = (props) => {
       );
     }
   };
-
-  useEffect(() => {
-    console.log("Use effect on Body Module.");
-    let today = new Date();
-
-    for (let i = 0; i < tasks.length; i++) {
-      let taskTime = new Date(tasks[i].date);
-      if (
-        !(
-          taskTime.getTime() < today.getTime() &&
-          taskTime.getDate() !== today.getDate() &&
-          tasks[i].isComplete === "Not Complete"
-        )
-      ) {
-        continue;
-      }
-      expireTasks(tasks[i], i).catch((err) => {
-        console.log(err);
-      });
-    }
-
-    sleep1s(() => {
-      setCurrentTime(currentTime + 1);
-    });
-  }, [currentTime]);
 
   return (
     <div>
