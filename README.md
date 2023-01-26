@@ -2,7 +2,7 @@
 
 run `npm install` in both folders
 
-run `node app.js` in server folder
+run `npx nodemon app.js` in server folder
 
 run `npm start` in client folder
 
