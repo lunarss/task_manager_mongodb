@@ -27,7 +27,7 @@ pm2 start npm -- start
 **pm2 command** to run nodejs app:
 
 ```
-pm2 start app.js
+pm2 start npx -- nodemon app.js
 ```
 
 **pm2 command** to restart nodejs app:
